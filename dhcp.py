@@ -6,7 +6,6 @@ def ip_other_mac_exists(cnx, ip, mac, cfg):
     """ 
     Vérifie si une IP est déjà utilisée par une autre adresse MAC.
     """
-    
     #Conversion de l'IP en objet IPv4Address
     ip = ipaddress.IPv4Address(ip)
     
@@ -14,22 +13,33 @@ def ip_other_mac_exists(cnx, ip, mac, cfg):
     file = cfg.get('dhcp_hosts_cfg')
 
     #Lecture du contenu du fichier de configuration DHCP via SSH
-    cat_file = cnx.run(f"cat {file}",hide=True)     
-    result = cat_file.stdout.strip() #Extraction du contenu et suppression des espaces
-  
-    #Vérifie si l'IP correspond et si la MAC est différente
-    for line in result.splitlines():
-        if str(ip) == line[28:] and mac.lower() not in line.lower():
-            return True # l'IP est deja utilise par une autre machine
-            
+    cat_file = cnx.run(f"cat {file}",hide=True) 
+    
+    result = cat_file.stdout.strip() #Transforme la sortie en string et supprime les espaces en trop
+
+    #Chaque ligne deviens un élément d'une liste tout en ignorant la première ligne qui est un commentaire
+    result = result.splitlines()[1:] 
+
+    for line in result:
+        parts = line.split(',')
+
+        if len(parts) == 2:
+
+            mac_in_file = parts[0].split('=')[1].lower()    #Extraction de l'adresse MAC
+            ip_in_file = parts[1].strip()                   #Extraction de l'adresse IP
+
+            #Si l'IP correspond avec une autre machine
+            if ip_in_file == str(ip) and mac_in_file != mac.lower():
+
+                return True 
+
     return False
- 
 
 def ip_and_mac_exists(cnx,ip,mac,cfg):
     """
     Vérifie si l'IP et la MAC sont déjà attribués ensemble dans le serveur DHCP distant.
     """
-
+    
     ip = ipaddress.IPv4Address(ip)
 
     file = cfg.get('dhcp_hosts_cfg')
@@ -37,55 +47,83 @@ def ip_and_mac_exists(cnx,ip,mac,cfg):
     #Lecture du contenu du fichier de configuration DHCP via SSH
     cat_file = cnx.run(f"cat {file}",hide=True)
 
-    result = cat_file.stdout.strip() #Extraction du contenu et suppression des espaces
+    result = cat_file.stdout.strip()
 
-    for line in result.splitlines():
+    result = result.splitlines()[1:]
 
-        #Vérifie si l'IP et la MAC correspondent toutes les deux dans la même ligne
-        if str(ip) == line[28:] and mac.lower() in line.lower():
+    for line in result:
+        parts = line.split(',')
 
-            return True # l'IP et la machine sont deja configurées
+        if len(parts) == 2:
 
-    return False    
-    
+            mac_in_file = parts[0].split('=')[1].lower()    #Extraction de l'adresse MAC
+            ip_in_file = parts[1].strip()                   #Extraction de l'adresse IP
+            
+            #Si l'IP correspond à la même adresse MAC
+            if ip_in_file == str(ip) and mac_in_file == mac.lower():
+
+                return True
+
+    return False 
+ 
 def mac_exists(cnx, mac, cfg):
     """
     Vérifie si l'adresse MAC existe dans la configuration DHCP.
     """
     
     file = cfg.get('dhcp_hosts_cfg')
-    
+
     #Lecture du contenu du fichier de configuration DHCP via SSH
     cat_file = cnx.run(f"cat {file}",hide=True)
     
-    result = cat_file.stdout.strip() #Extraction du contenu et suppression des espaces
+    result = cat_file.stdout.strip()
+
+    result = result.splitlines()[1:]
     
-    for line in result.splitlines():
-        
-        #Vérifie si la MAC est présente dans le fichier (insensible à la casse)
-        if mac.lower() in line.lower():
-            
-            return True #L'adresse MAC est presente dans le fichier de config
-    
-    return False   
+    for line in result:
+
+        parts = line.split(',')
+
+        if len(parts) == 2:
+
+            mac_in_file = parts[0].split('=')[1].lower() #Extraction de l'adresse MAC
+
+            #Si l'adresse MAC se trouve dans le fichier
+            if mac_in_file == mac.lower():
+                return True
+
+    return False
 
 def mac_exists_line(cnx, mac, cfg):
     """
     Retourne le numéro de ligne où se trouve l'adresse MAC passée en paramètre. 
-    """    
-
+    """  
+    
     file = cfg.get('dhcp_hosts_cfg')
 
-    #Lecture du contenu du fichier de configuration DHCP via SSH
     cat_file = cnx.run(f"cat {file}",hide=True) 
 
     result = cat_file.stdout.strip()
 
+    result = result.splitlines()
+
     i = 0
-    for line in result.splitlines():
+    
+    #Recupere la ligne a laquelle il a trouver la correspondance
+    for line in result:
+
         i += 1
-        if mac.lower() in line.lower():
-            return i #Recupere la ligne a laquelle il a trouver la correspondance
+
+        parts = line.split(',')
+
+        if len(parts) == 2:
+
+            mac_in_file = parts[0].split('=')[1].lower()  #Extraction de l'adresse MAC
+
+            if mac_in_file == mac.lower():
+
+                return i #Numéro de la ligne correspondant
+
 
 def dhcp_add(ip,mac,server,cfg):
     """
@@ -134,18 +172,17 @@ def dhcp_remove(mac,server,cfg):
     cnx = Connection(host=server, user=user, connect_kwargs={"key_filename": f"/home/{user}/.ssh/id_rsa"})
 
     #Si la MAC est présente dans le fichier de configuration DHCP 
-    if mac_exists(cnx,mac,cfg) == True:
+    if mac_exists(cnx,mac,cfg):
         i = mac_exists_line(cnx,mac,cfg) #Récupère le numéro de la ligne à laquelle il trouve l'adresse MAC
-        
-        #Suppression de la ligne avec sed
-        cnx.run(f"sudo sed -i '{i}d' {file}") #Pour contrer le probleme de la casse, on peut pas specifier d'option pour delete tout en ignorant la casse
-        return True
+        if i: #Verifie que c'est pas vide
+            #Suppression de la ligne avec sed
+            cnx.run(f"sudo sed -i '{i}d' {file}") #Pour contrer le probleme de la casse, on peut pas specifier d'option pour delete tout en ignorant la casse
+            return True
 
     else:
 
         return False
-
-
+    
 def dhcp_list(server, cfg):
     """
     Liste toutes les entrées DHCP du serveur.
@@ -156,22 +193,32 @@ def dhcp_list(server, cfg):
 
     file = cfg.get('dhcp_hosts_cfg')
     user = cfg.get('user')
-
+    
+    #Initialisation de la connexion SSH
     cnx = Connection(host=server, user=user, connect_kwargs={"key_filename": f"/home/{user}/.ssh/id_rsa"})
 
-    result = cnx.run(f'cat {file}',hide=True)
-    
-    #stdout transforme en str, splitlines pour transformer chaque ligne en element d'une liste
-    liste = result.stdout.splitlines() 
+    cat_file = cnx.run(f'cat {file}',hide=True)
 
-    #Parcours des lignes (en sautant la première ligne de commentaire)
-    for ligne in liste[1:]:
-        
-        #Extraction de la MAC (positions 10-27) et de l'IP (position 28 à la fin)
-        dic = {"mac":ligne[10:27],"ip":ligne[28:]}
-        final_list.append(dic)
+    result = cat_file.stdout.strip()
+
+    result = result.splitlines()[1:]
+
+    for line in result:
+
+        parts = line.split(',')
+
+        if len(parts) == 2:
+
+            mac = parts[0].split('=')[1]  #Extraction de l'adresse MAC
+            ip = parts[1].strip()         #Extraction de l'adresse IP
+            
+            
+            #Affichage dans une liste de dictionnaires
+            dic = {'mac':mac,'ip':ip}     
+            final_list.append(dic)        
 
     return final_list
+
 
 def check_dhcp_list(serv_dhcp,cfg):
     '''
@@ -186,27 +233,34 @@ def check_dhcp_list(serv_dhcp,cfg):
     # Coupe les lignes en 2 colonnes en prenant comme separateur ',' puis selectionne la colonne de gauche
     # trie avec 'sort' en étant insensible à la casse
     # 'uniq -di' pour retourner ce qui est en doublon une seule fois et en etant insensible a la casse
+    
+   
     check_mac = cnx.run(f"cut -d ',' -f1 {file} | sort -f | uniq -di",hide=True)
 
+    
     #Extraction des MACs dupliquées dans une liste
     mac_duplique = check_mac.stdout.strip().split()
 
     if mac_duplique: #Si la liste n'est pas vide, affichage des doublons de MAC
         print(f'duplicate MAC addresses in {serv_dhcp} cfg:')
 
-        for add_mac in mac_duplique:
+        for add_mac in mac_duplique:           
             cnx.run(f'grep -i {add_mac} {file}')
 
         print() #Saut de ligne pour que ça soit plus lisible sur le terminal
     
+
     check_ip = cnx.run(f"cut -d ',' -f2 {file} | sort | uniq -d",hide=True)
+
+    
     ip_duplique = check_ip.stdout.strip().split()
     
     if ip_duplique: #Si la liste n'est pas vide, affichage des doublons d'IP
 
         print(f'duplicate IP addresses in {serv_dhcp} cfg:')
 
-        for add_ip in ip_duplique:
+        for add_ip in ip_duplique:           
+           
             cnx.run(f"grep -w {add_ip} {file}")
 
         print()

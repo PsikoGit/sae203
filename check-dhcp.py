@@ -4,6 +4,7 @@ import sys
 from config import load_config
 from dhcp import check_dhcp_list
 from validation import valid_ip
+from paramiko.ssh_exception import NoValidConnectionsError
 
 def show_help():
     """
@@ -14,7 +15,35 @@ def show_help():
     print('Usage: check-dhcp.py [DHCP IP address or DHCP Network address]')
     print('Example 1 : check-dhcp.py')
     print('Example 2 : check-dhcp.py 10.20.1.5')
+    print('Allowed options : [-show] [-h] [--help]')
     return
+
+def show_dhcp():
+    """ 
+    Affiche les serveurs DHCP qui sont configures dans le fichier YAML
+    """
+
+    cfg = load_config('file.yaml',True)
+
+    if cfg == None:
+        print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
+        print("Manually create the YAML configuration file by following the documentation.",file=sys.stderr)
+        return  
+
+    #Si une erreur est survenue lors du chargement du fichier
+    if cfg == False:
+        print("Error while attempting load yaml file configuration",file=sys.stderr)
+        return
+
+    #Si la clé 'dhcp-servers' est absente du fichier de configuration
+    if cfg.get('dhcp-servers') == None:
+        print('No DHCP servers found in YAML configuration file, dhcp-servers keys are missing',file=sys.stderr)
+        print('Append DHCP ip address on YAML configuration file by following the official documentation',file=sys.stderr)
+        return
+
+    for serv_dhcp in cfg.get('dhcp-servers'):
+        print(f'DHCP server defined in the YAML file : {serv_dhcp}')
+
 
 def check_dhcp(serv_dhcp=None):
     """
@@ -72,18 +101,32 @@ def check_dhcp(serv_dhcp=None):
             return
 
         #On appel la fonction qui vérifie la config pour un serveur DHCP
-        check_dhcp_list(serv_dhcp,cfg)
-        
+        try:
+            check_dhcp_list(serv_dhcp,cfg)
+        except NoValidConnectionsError:
+            print(f"SSH connection error with {serv_dhcp} server",file=sys.stderr)
+            return
+            
+            
     #Si aucun serveur n'est passé en argument, on vérifie tous les serveurs DHCP
     if serv_dhcp == None:
-        for serv in cfg.get('dhcp-servers'):
-            check_dhcp_list(serv,cfg)
         
+        for serv in cfg.get('dhcp-servers'):
+            
+            try:
+                check_dhcp_list(serv,cfg)
+            except NoValidConnectionsError:
+                print(f"SSH connection error with {serv} server",file=sys.stderr)
+                return
         
 def main():
     """ 
     Fonction principale
     """
+
+    if len(sys.argv) == 2 and sys.argv[1] == '-show':
+        show_dhcp()
+        return
 
     #Affiche l'aide si argument -h ou --help
     if len(sys.argv) == 2 and sys.argv[1] in ['-h','--help']:

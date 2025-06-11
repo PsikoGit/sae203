@@ -14,8 +14,36 @@ def show_help():
     print('Usage: list-dhcp.py [DHCP IP address]')
     print('Example 1 : list-dhcp.py')
     print('Example 2 : list-dhcp.py 10.20.2.5')
+    print('Allowed options : [-show] [-h] [--help]')
     return
 
+def show_dhcp():
+    """ 
+    Affiche les serveurs DHCP qui sont configures dans le fichier YAML
+    """
+
+    cfg = load_config('file.yaml',True)
+
+    if cfg == None:
+        print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
+        print("Manually create the YAML configuration file by following the documentation.",file=sys.stderr)
+        return  
+
+    #Si une erreur est survenue lors du chargement du fichier
+    if cfg == False:
+        print("Error while attempting load yaml file configuration",file=sys.stderr)
+        return
+
+    #Si la clé 'dhcp-servers' est absente du fichier de configuration
+    if cfg.get('dhcp-servers') == None:
+        print('No DHCP servers found in YAML configuration file, dhcp-servers keys are missing',file=sys.stderr)
+        print('Append DHCP ip address on YAML configuration file by following the official documentation',file=sys.stderr)
+        return
+
+    for serv_dhcp in cfg.get('dhcp-servers'):
+        print(f'DHCP server defined in the YAML file : {serv_dhcp}')
+                      
+    
 def list_dhcp(serv_dhcp=None):
     """ 
     
@@ -95,6 +123,10 @@ def main():
     Fonction principale
     """
 
+    if len(sys.argv) == 2 and sys.argv[1] == '-show':
+        show_dhcp()
+        return
+        
     #Affichage de l'aide si -h ou --help est passé en argument
     if len(sys.argv) == 2 and sys.argv[1] in ['-h','--help']:
         show_help()

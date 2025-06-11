@@ -16,7 +16,35 @@ def show_help():
     print('The command allows you to add a MAC/IP association to the DHCP server on the same network as the specified IP')
     print("Usage: add-dhcp-client.py MAC IP")
     print("Example: add-dhcp-client.py aa:bb:cc:dd:ee:ff 10.20.1.100")
+    print('Allowed options : [-show] [-h] [--help]')
     return
+
+def show_dhcp():
+    """ 
+    Affiche les serveurs DHCP qui sont configures dans le fichier YAML
+    """
+
+    cfg = load_config('file.yaml',True)
+
+    if cfg == None:
+        print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
+        print("Manually create the YAML configuration file by following the documentation.",file=sys.stderr)
+        return  
+
+    #Si une erreur est survenue lors du chargement du fichier
+    if cfg == False:
+        print("Error while attempting load yaml file configuration",file=sys.stderr)
+        return
+
+    #Si la clé 'dhcp-servers' est absente du fichier de configuration
+    if cfg.get('dhcp-servers') == None:
+        print('No DHCP servers found in YAML configuration file, dhcp-servers keys are missing',file=sys.stderr)
+        print('Append DHCP ip address on YAML configuration file by following the official documentation',file=sys.stderr)
+        return
+
+    for serv_dhcp in cfg.get('dhcp-servers'):
+        print(f'DHCP server defined in the YAML file : {serv_dhcp}')
+
 
 def add_dhcp_client(mac,ip):
     """ 
@@ -103,6 +131,10 @@ def main():
     """ 
     Programme principal
     """
+
+    if len(sys.argv) == 2 and sys.argv[1] == '-show':
+        show_dhcp()
+        return
     
     #Affiche l'aide si argument -h ou --help
     if len(sys.argv) == 2 and sys.argv[1] in ['-h','--help']:

@@ -18,7 +18,35 @@ def show_help():
     print('Usage: remove-dhcp-client.py MAC or remove-dhcp-client.py -d MAC DHCP_IP_ADDRESS')
     print('Example 1 : remove-dhcp-client.py AA:AA:AA:AA:AA:AA')
     print('Example 2 : remove-dhcp-client.py -d BB:BB:BB:BB:BB:BB 10.20.1.5')
+    print('Allowed options : [-d] [-show] [-h] [--help]')
     return
+
+def show_dhcp():
+    """ 
+    Affiche les serveurs DHCP qui sont configures dans le fichier YAML
+    """
+
+    cfg = load_config('file.yaml',True)
+
+    if cfg == None:
+        print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
+        print("Manually create the YAML configuration file by following the documentation.",file=sys.stderr)
+        return  
+
+    #Si une erreur est survenue lors du chargement du fichier
+    if cfg == False:
+        print("Error while attempting load yaml file configuration",file=sys.stderr)
+        return
+
+    #Si la clé 'dhcp-servers' est absente du fichier de configuration
+    if cfg.get('dhcp-servers') == None:
+        print('No DHCP servers found in YAML configuration file, dhcp-servers keys are missing',file=sys.stderr)
+        print('Append DHCP ip address on YAML configuration file by following the official documentation',file=sys.stderr)
+        return
+
+    for serv_dhcp in cfg.get('dhcp-servers'):
+        print(f'DHCP server defined in the YAML file : {serv_dhcp}')
+
 
 def remove_dhcp_client_with_server(mac, serv_dhcp):
     """ 
@@ -168,6 +196,10 @@ def main():
     """ 
     Fonction principale
     """
+
+    if len(sys.argv) == 2 and sys.argv[1] == '-show':
+        show_dhcp()
+        return
 
     #Affiche l'aide si argument -h ou --help
     if len(sys.argv) == 2 and sys.argv[1] in ['-h','--help']:

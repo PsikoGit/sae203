@@ -8,10 +8,6 @@ def load_config(filename, create):
     Charge un fichier de configuration YAML ou le crée s'il n'existe pas.
     """
     
-    assert type(filename) == str
-    assert filename.strip() != ""
-    assert type(create) == bool
-    
     #Vérification si le fichier existe et est bien un fichier
     if os.path.exists(filename) and os.path.isfile(filename):
         

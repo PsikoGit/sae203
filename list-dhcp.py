@@ -3,7 +3,9 @@
 import sys
 from config import load_config
 from dhcp import dhcp_list
+from pathlib import Path
 from validation import valid_ip
+from paramiko.ssh_exception import NoValidConnectionsError
 
 def show_help():
     """
@@ -22,7 +24,11 @@ def show_dhcp():
     Affiche les serveurs DHCP qui sont configures dans le fichier YAML
     """
 
-    cfg = load_config('file.yaml',True)
+    file = Path('file.yaml')
+    file_abs = file.resolve()
+
+    
+    cfg = load_config(file_abs,True)
 
     if cfg == None:
         print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
@@ -54,10 +60,11 @@ def list_dhcp(serv_dhcp=None):
                   Si None, la commande s’applique à tous les serveurs listés dans le fichier YAML.
                   
     """
-
+    file = Path('file.yaml')
+    file_abs = file.resolve()
 
     #Charge le fichier de config YAML
-    cfg = load_config('file.yaml', False)
+    cfg = load_config(file_abs, False)
 
     #Si le fichier n'existe pas et qu'on a demandé à ne pas le créer automatiquement
     if cfg == None:
@@ -100,7 +107,12 @@ def list_dhcp(serv_dhcp=None):
 
 
         #Récupération et affichage des couples MAC/IP pour le serveur DHCP trouvé
-        liste = dhcp_list(serv_dhcp,cfg)
+        try:
+            liste = dhcp_list(serv_dhcp,cfg)
+        except NoValidConnectionsError:
+            print(f"SSH connection error with {serv_dhcp} server",file=sys.stderr)
+            return
+            
         for elem in liste:
             mac = elem.get('mac')
             ip = elem.get('ip')           
@@ -111,7 +123,11 @@ def list_dhcp(serv_dhcp=None):
     if serv_dhcp == None:
         for serv in cfg.get('dhcp-servers'):
             print(f"{serv}:")
-            liste = dhcp_list(serv,cfg)
+            try:
+                liste = dhcp_list(serv,cfg)
+            except NoValidConnectionsError:
+                print(f"SSH connection error with {serv} server",file=sys.stderr)
+                return
             for elem in liste:
                 mac=elem.get('mac')
                 ip = elem.get('ip')

@@ -22,3 +22,5 @@ Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pou
 
 Il faut que le fichier YAML s'appel obligatoirement : file.yaml
 À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP 
+
+Il faudra que le fichier de 

@@ -21,6 +21,4 @@ Une fois que c'est fait, il faut créer un groupe qui se nommera superv pour l'u
 Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pour se faire, sur le serveur central, entrer la commande : ssh-keygen -t rsa, laissez le nom des fichiers qui contiennent les clés par défaut (id_rsa et id_rsa.pub), transférez votre clé publique sur le/les serveur(s) DHCP distant(s), vous pouvez utiliser scp, exemple : scp ~/.ssh/id_rsa.pub user@ip_dhcp: , il faudra avoir installé au préalable le paquet ssh sur le/les serveur(s) DHCP, ensuite aller sur le serveur DHCP et faire cat ~/id_rsa.pub >> ~/.ssh/authorized_keys, désormais, il vous sera possible de vous connecter au serveur DHCP distant via ssh sans mot de passe, répétez la même procédure pour tout vos serveurs DHCP.
 
 Il faut que le fichier YAML s'appel obligatoirement : file.yaml
-À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP 
-
-Il faudra que le fichier de 
+À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant

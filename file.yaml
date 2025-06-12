@@ -1,0 +1,4 @@
+#Fichier YAML à remplir en lançant le script install.sh
+dhcp_hosts_cfg: 
+user:
+dhcp-servers:

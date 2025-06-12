@@ -1,8 +1,12 @@
 #!/bin/bash
 
+#Etape 0 : Rendre tous les scripts executables (si y'a un bug et que ce n'est pas fait)
+
+chmod +x remove-dhcp-client.py list-dhcp.py install_dependencies.sh configure_yaml.py check-dhcp.py add-dhcp-client.py
+
+
 #Etape 1 : installer les modules python fabric et pyyaml via pip3 
 
-chmod +x install_dependencies.sh
 ./install_dependencies.sh
 
 #Etape 2 : Ajouter le PATH s'il n'y est pas
@@ -22,7 +26,5 @@ source ~/.bashrc
 
 #Etape 3 : Creer le fichier YAML
 
-echo ""
-echo "CONFIGURATION DU FICHIER YAML"
 echo ""
 python3 configure_yaml.py

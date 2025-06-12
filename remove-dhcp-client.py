@@ -99,7 +99,7 @@ def remove_dhcp_client_with_server(mac, serv_dhcp):
     #Récupération du nom d'utilisateur depuis la configuration
     cnx = Connection(host=serv_dhcp, user=user, connect_kwargs={"key_filename": f"/home/{user}/.ssh/id_rsa"})
      
-    #Établissement de la connexion SSH vers le serveur DHCP
+    #Appel de la fonction qui permet de supprimer une MAC
     remove = dhcp_remove(mac,serv_dhcp,cfg)
 
     #Si il y'a eu une supression

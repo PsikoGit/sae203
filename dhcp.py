@@ -172,8 +172,10 @@ def dhcp_remove(mac,server,cfg):
     cnx = Connection(host=server, user=user, connect_kwargs={"key_filename": f"/home/{user}/.ssh/id_rsa"})
 
     #Si la MAC est présente dans le fichier de configuration DHCP 
-    if mac_exists(cnx,mac,cfg):
+    if mac_exists(cnx,mac,cfg) == True:
+    
         i = mac_exists_line(cnx,mac,cfg) #Récupère le numéro de la ligne à laquelle il trouve l'adresse MAC
+        
         if i: #Verifie que c'est pas vide
             #Suppression de la ligne avec sed
             cnx.run(f"sudo sed -i '{i}d' {file}") #Pour contrer le probleme de la casse, on peut pas specifier d'option pour delete tout en ignorant la casse

@@ -8,8 +8,9 @@ yaml_file = "file.yaml"
 
 # Vérifie que le fichier existe
 if not os.path.exists(yaml_file):
-    print(f"Erreur : le fichier {yaml_file} n'existe pas.")
-    exit(1)
+    print(f"Erreur : le fichier {yaml_file} n'existe pas. Crétion du fichier automatique :")
+    with open(yaml_file,'w') as fd:
+        yaml.dump({},fd)
 
 with open(yaml_file, 'r') as f:
     data = yaml.safe_load(f)
@@ -18,6 +19,8 @@ if data is None:
     data = {}
 
 # Demande interactive
+
+print(f'CREATION DU FICHIER YAML : {yaml_file}')
 
 # 1. Chemin fichier DHCP
 dhcp_path = input("Chemin absolu du fichier de configuration DHCP (ex: /etc/dnsmasq.d/hosts.conf) : ").strip()

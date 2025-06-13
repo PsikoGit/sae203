@@ -29,19 +29,20 @@ Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), v
 
 FICHIER YAML :
 
-Le fichier doit s'appeler obligatoire file.yaml et se trouver dans le même répertoire que les scripts python, il se constitue de cette sorte :
-
+Le fichier doit s'appeler obligatoire file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :
+<pre>
 dhcp_hosts_cfg:
 user:
 dhcp-servers:
+</pre>
 
 À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant.
 À la clé user il faudra renseigner le nom d'utilisateur en commun sur tous vos serveurs
 À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP et le réseau dans lequel il se situe, voici un exemple :
-
+<pre>
 dhcp_hosts_cfg: /etc/dnsmasq.d/hosts.conf
 user: sae203
 dhcp-servers:
    10.20.1.5: 10.20.1.0/24
    10.20.2.5: 10.20.2.0/24
-
+</pre>

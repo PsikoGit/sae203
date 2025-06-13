@@ -2,7 +2,7 @@ Pré-requis techniques :
 
 Avoir un environnement avec des machines Linux qui supportent python3, pip3 et fabric.
 
-Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs DHCP), vous pouvez ajouter un utilisateur via la commande sudo adduser [USER] et mettre les mêmes informations sur chaque serveur.
+Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs DHCP)
 
 Instructions serveur-central : 
 

@@ -26,7 +26,7 @@ def show_dhcp():
     Affiche les serveurs DHCP qui sont configures dans le fichier YAML
     """
 
-    cfg = load_config('file.yaml',True)
+    cfg = load_config('file.yaml',False)
 
     if cfg == None:
         print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
@@ -100,7 +100,11 @@ def remove_dhcp_client_with_server(mac, serv_dhcp):
     cnx = Connection(host=serv_dhcp, user=user, connect_kwargs={"key_filename": f"/home/{user}/.ssh/id_rsa"})
      
     #Appel de la fonction qui permet de supprimer une MAC
-    remove = dhcp_remove(mac,serv_dhcp,cfg)
+    try:
+        remove = dhcp_remove(mac,serv_dhcp,cfg)
+    except NoValidConnectionsError:       
+        print(f"SSH connection error with {serv_dhcp} server",file=sys.stderr)
+        return
 
     #Si il y'a eu une supression
     if remove == True:

@@ -15,7 +15,7 @@ Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer 
                                                      |                       |
                                              [ Serveur DHCP 1 ]      [ Serveur DHCP 2 ]
 
-Il n'y a pas de restrictions quant au nombre de réseaux/serv_dhcp supervisés, chaque serveur dhcp et réseau doivent être configurés dans le fichier YAML qui se trouve dans le repo github, les scripts python se basent sur ce fichier YAML pour fonctionner. Il faut que le fichier YAML s'appel obligatoirement : file.yaml
+Il n'y a pas de restrictions quant au nombre de réseaux/serv_dhcp supervisés, chaque serveur dhcp et réseau doivent être configurés dans le fichier YAML qui se trouve dans le repo github, les scripts python se basent sur ce fichier YAML pour fonctionner.
 
 Sur le serveur central, une fois que vous avez importés le dossier github, il faudra exécuter le script install.sh via la commande <code>./install.sh</code> , si le script install.sh n'est pas exécutable rendez le exécutable via la commande <code>chmod +x install.sh</code> et relancer le script.
 

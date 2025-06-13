@@ -31,8 +31,8 @@ FICHIER YAML :
 
 Le fichier doit s'appeler obligatoire file.yaml et se trouver dans le même répertoire que les scripts python, il se constitue de cette sorte :
 
-dhcp_hosts_cfg:  
-user: 
+dhcp_hosts_cfg:
+user:
 dhcp-servers:
 
 À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant.

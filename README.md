@@ -19,7 +19,7 @@ Il n'y a pas de restrictions quant au nombre de réseaux/serv_dhcp supervisés, 
 
 Sur le serveur central, une fois que vous avez importés le dossier github, il faudra exécuter le script install.sh via la commande <code>./install.sh</code> , si le script install.sh n'est pas exécutable rendez le exécutable via la commande <code>chmod +x install.sh</code> et relancer le script.
 
-Ce script va vous permettre de rendre exécutable tous les fichiers qui doivent l'être et de faire en sorte de pouvoir exécuter les commandes python de supervision DHCP depuis n'importe quel dossier de votre terminal et de créer le fichier YAML de manière dynamique. Suivez bien les instructions au niveau du ficher YAML.
+Ce script va vous permettre de rendre exécutable tous les fichiers qui doivent l'être, de faire en sorte de pouvoir exécuter les commandes python de supervision DHCP depuis n'importe quel dossier de votre terminal et de créer le fichier YAML de manière dynamique. Suivez bien les instructions au niveau du ficher YAML.
 
 Une fois que c'est fait, il faut créer un groupe qui se nommera superv pour l'utilisateur qui sera utilisé sur tous vos serveurs (celui spécifié dans le fichier YAML), dans mon exemple, le même utilisateur que je vais utilisé sur chaque serveur se nomme sae203, et le groupe se nomme superv, je vais donc exécuter la commande : <code>sudo usermod -aG superv sae203</code>
 Ça va nous servir pour pouvoir faire certaines commandes qui nécessitent les droits sudo sans pour autant avoir besoin de renseigner le mot de passe.

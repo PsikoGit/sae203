@@ -36,9 +36,9 @@ user:
 dhcp-servers:
 </pre>
 
-À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant.
-À la clé user il faudra renseigner le nom d'utilisateur en commun sur tous vos serveurs
-À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP et le réseau dans lequel il se situe, voici un exemple :
+À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant. <br>
+À la clé user il faudra renseigner le nom d'utilisateur en commun sur tous vos serveurs <br>
+À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP et le réseau dans lequel il se situe, voici un exemple : 
 <pre>
 dhcp_hosts_cfg: /etc/dnsmasq.d/hosts.conf
 user: sae203

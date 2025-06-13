@@ -8,12 +8,12 @@ Instructions serveur-central :
 
 Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer avec tous les réseaux sur lequel se trouve un serveur DHCP que vous voulez superviser. Un exemple de topologie peut-être un serveur central relié à 2 VLANs sur lesquels se trouvent respectivement un serveur DHCP (voir schéma ci-dessous)
    
-                                                               [ Machine Centrale ]
-                                                                /              \
-                                                               /                \
-                                                      [ Réseau 1 ]          [ Réseau 2 ]
-                                                         |                       |
-                                                  [ Serveur DHCP 1 ]      [ Serveur DHCP 2 ]
+                                                         [ Machine Centrale ]
+                                                           /              \
+                                                           /                \
+                                                  [ Réseau 1 ]          [ Réseau 2 ]
+                                                     |                       |
+                                             [ Serveur DHCP 1 ]      [ Serveur DHCP 2 ]
 
 Il n'y a pas de restrictions quant au nombre de réseaux/serv_dhcp supervisés, chaque serveur dhcp et réseau doivent être configurés dans le fichier YAML qui se trouve dans le repo github, les scripts python se basent sur ce fichier YAML pour fonctionner. Il faut que le fichier YAML s'appel obligatoirement : file.yaml
 

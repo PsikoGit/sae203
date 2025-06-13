@@ -27,6 +27,10 @@ Une fois que c'est fait, il faut créer un groupe qui se nommera superv pour l'u
 Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pour se faire, sur le serveur central, entrer la commande : <code>ssh-keygen -t rsa</code>, ⚠️IMPORTANT⚠️ : laissez le nom par défaut des fichiers qui contiennent les clés (id_rsa et id_rsa.pub) sinon les codes ne vont pas fonctionner.
 Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), vous pouvez utiliser scp, exemple : <code>scp ~/.ssh/id_rsa.pub user@ip_dhcp:</code>, il faudra avoir installé au préalable le paquet ssh sur le/les serveur(s) DHCP, ensuite aller sur le serveur DHCP et faire <code>cat ~/id_rsa.pub >> ~/.ssh/authorized_keys</code>, désormais, il vous sera possible de vous connecter au serveur DHCP distant via ssh sans mot de passe, répétez la même procédure pour tout vos serveurs DHCP.
 
+Instructions serveur DHCP :
+
+Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>
+
 FICHIER YAML :
 
 Le fichier doit s'appeler obligatoire file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :

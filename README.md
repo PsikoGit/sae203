@@ -10,7 +10,7 @@ Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer 
    
                                                          [ Machine Centrale ]
                                                            /              \
-                                                           /                \
+                                                          /                \
                                                   [ Réseau 1 ]          [ Réseau 2 ]
                                                      |                       |
                                              [ Serveur DHCP 1 ]      [ Serveur DHCP 2 ]
@@ -21,7 +21,7 @@ Sur le serveur central, une fois que vous avez importés le dossier github, il f
 
 Ce script va vous permettre de rendre exécutable tous les fichiers qui doivent l'être, de faire en sorte de pouvoir exécuter les commandes python de supervision DHCP depuis n'importe quel dossier de votre terminal et de créer le fichier YAML de manière dynamique. Suivez bien les instructions au niveau du ficher YAML.
 
-Une fois que c'est fait, il faut créer un groupe qui se nommera superv pour l'utilisateur qui sera utilisé sur tous vos serveurs (celui spécifié dans le fichier YAML), dans mon exemple, le même utilisateur que je vais utilisé sur chaque serveur se nomme sae203, et le groupe se nomme superv, je vais donc exécuter la commande : <code>sudo usermod -aG superv sae203</code>
+Une fois que c'est fait, il faut créer un groupe, vous pouvez le nommer comme vous voulez, dans mon exemple je vais le nommer <code>superv</code> pour l'utilisateur qui sera utilisé sur tous vos serveurs (celui spécifié dans le fichier YAML), dans mon exemple, le même utilisateur que je vais utilisé sur chaque serveur se nomme <code>sae203</code>, et le groupe se nomme <code>superv</code>, je vais donc exécuter la commande : <code>sudo usermod -aG superv sae203</code>
 Ça va nous servir pour pouvoir faire certaines commandes qui nécessitent les droits sudo sans pour autant avoir besoin de renseigner le mot de passe.
 
 Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pour se faire, sur le serveur central, entrer la commande : <code>ssh-keygen -t rsa</code>, ⚠️IMPORTANT⚠️ : laissez le nom par défaut des fichiers qui contiennent les clés (id_rsa et id_rsa.pub) sinon les codes ne vont pas fonctionner.
@@ -50,3 +50,9 @@ dhcp-servers:
    10.20.1.5: 10.20.1.0/24
    10.20.2.5: 10.20.2.0/24
 </pre>
+
+Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
+
+Filtrage sudo :
+
+Il faudra créer le groupe superv 

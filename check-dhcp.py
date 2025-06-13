@@ -23,11 +23,8 @@ def show_dhcp():
     """ 
     Affiche les serveurs DHCP qui sont configures dans le fichier YAML
     """
-    script_dir = Path(__file__).parent
-    file = script_dir / 'file.yaml'
-    file_abs = file.resolve()
     
-    cfg = load_config(file_abs,False)
+    cfg = load_config('file.yaml',False)
 
     if cfg == None:
         print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
@@ -58,13 +55,9 @@ def check_dhcp(serv_dhcp=None):
     - serv_dhcp : adresse IP du serveur DHCP ou réseau DHCP à vérifier.
                   Si None, on vérifie tous les serveurs de la config YAML.
     """
-
-    script_dir = Path(__file__).parent
-    file = script_dir / 'file.yaml'
-    file_abs = file.resolve()
     
     #Chargement du fichier de configuration YAML
-    cfg = load_config(file_abs, False)
+    cfg = load_config('file.yaml', False)
 
 
     #Si le fichier n'existe pas et qu'on a demandé à ne pas le créer automatiquement

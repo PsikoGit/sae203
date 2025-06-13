@@ -9,8 +9,9 @@ def load_config(filename, create):
     Charge un fichier de configuration YAML ou le crée s'il n'existe pas.
     """
     script_dir = Path(__file__).parent
-    filename = script_dir / 'file.yaml'
+    filename = script_dir / filename
     filename = filename.resolve()
+  
     #Vérification si le fichier existe et est bien un fichier
     if os.path.exists(filename) and os.path.isfile(filename):
         

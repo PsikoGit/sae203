@@ -1,6 +1,19 @@
 import ipaddress
 import re
 
+def valid_network(network):
+    """
+    Vérifie si l'adresse passée en paramètre est une adresse de réseau valide.
+    Exemple : 10.20.1.0/24 retournera True et 10.20.1.5/24 retournera False car ce n'est pas
+    une adresse de réseau.
+    """
+
+    try:
+        ipaddress.IPv4Network(network,strict=True) #Accepte que les adresses de réseau strictement
+        return True
+    except ValueError:
+        return False
+        
 def valid_ip(ip):
     """
     Vérifie que l'adresse IP reçue en paramètre est un adresse IPv4 valide.

@@ -3,8 +3,9 @@
 import sys
 from config import load_config
 from dhcp import check_dhcp_list
-from validation import valid_ip
+from validation import valid_ip,valid_network
 from paramiko.ssh_exception import NoValidConnectionsError
+from pathlib import Path
 
 def show_help():
     """
@@ -22,8 +23,11 @@ def show_dhcp():
     """ 
     Affiche les serveurs DHCP qui sont configures dans le fichier YAML
     """
-
-    cfg = load_config('file.yaml',True)
+    script_dir = Path(__file__).parent
+    file = script_dir / 'file.yaml'
+    file_abs = file.resolve()
+    
+    cfg = load_config(file_abs,False)
 
     if cfg == None:
         print("The configuration file doesn't exist and parameter create = False",file=sys.stderr)
@@ -55,9 +59,12 @@ def check_dhcp(serv_dhcp=None):
                   Si None, on vérifie tous les serveurs de la config YAML.
     """
 
-
+    script_dir = Path(__file__).parent
+    file = script_dir / 'file.yaml'
+    file_abs = file.resolve()
+    
     #Chargement du fichier de configuration YAML
-    cfg = load_config('file.yaml', False)
+    cfg = load_config(file_abs, False)
 
 
     #Si le fichier n'existe pas et qu'on a demandé à ne pas le créer automatiquement
@@ -80,7 +87,7 @@ def check_dhcp(serv_dhcp=None):
     #Si un serveur spécifique est demandé
     if serv_dhcp != None:
         
-        if valid_ip(serv_dhcp) == False:
+        if valid_ip(serv_dhcp) == False and valid_network(serv_dhcp) == False:
             print('Error IP address',file=sys.stderr)
             show_help()
             return

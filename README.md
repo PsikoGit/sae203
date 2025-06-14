@@ -4,6 +4,8 @@ Avoir un environnement avec des machines Linux qui supportent python3, pip3 et f
 
 Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs DHCP)
 
+Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit création du groupe sur les serveurs DHCP, etc...) pour que les codes soient fonctionnels.
+
 <h2>Instructions serveur-central :</h2>
 
 Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer avec tous les réseaux sur lequel se trouve un serveur DHCP que vous voulez superviser. Un exemple de topologie peut-être un serveur central relié à 2 VLANs sur lesquels se trouvent respectivement un serveur DHCP (voir schéma ci-dessous)

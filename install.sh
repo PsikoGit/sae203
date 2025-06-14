@@ -15,7 +15,7 @@ CURRENT_DIR=$(pwd)
 
 if ! grep -q "$CURRENT_DIR" ~/.bashrc; then
 
-    echo "export PATH=\"\$PATH:$CURRENT_DIR\"" >> ~/.bashrc
+    echo "export PATH=\"$CURRENT_DIR:$PATH\"" >> ~/.bashrc
 
     echo "Ajout de $CURRENT_DIR au PATH dans .bashrc"
 else

@@ -235,11 +235,11 @@ def check_dhcp_list(serv_dhcp,cfg):
     # Coupe les lignes en 2 colonnes en prenant comme separateur ',' puis selectionne la colonne de gauche
     # trie avec 'sort' en étant insensible à la casse
     # 'uniq -di' pour retourner ce qui est en doublon une seule fois et en etant insensible a la casse
-    
-   
+
+
     check_mac = cnx.run(f"cut -d ',' -f1 {file} | sort -f | uniq -di",hide=True)
 
-    
+
     #Extraction des MACs dupliquées dans une liste
     mac_duplique = check_mac.stdout.strip().split()
 

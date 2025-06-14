@@ -31,6 +31,12 @@ Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), v
 
 Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>
 
+Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
+
+Filtrage sudo :
+
+Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo usermod -aG superv [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%groupe ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>
+
 <h2>FICHIER YAML :</h2>
 
 Le fichier doit s'appeler obligatoire file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :
@@ -50,9 +56,3 @@ dhcp-servers:
    10.20.1.5: 10.20.1.0/24
    10.20.2.5: 10.20.2.0/24
 </pre>
-
-Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
-
-Filtrage sudo :
-
-Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo usermod -aG superv [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%groupe ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>

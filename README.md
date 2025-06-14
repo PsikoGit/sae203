@@ -35,7 +35,18 @@ Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
 
 Filtrage sudo :
 
-Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo usermod -aG superv [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%groupe ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>
+Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo usermod -aG superv [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%groupe ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe "groupe" à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par /etc/dnsmasq.d/[...] avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
+
+Filtrage ssh :
+
+Il faudra prendre le script qui se trouve dans le répertoire <code>code_dhcp</code> sur le dépot GitHub et le mettre sur votre serveur DHCP, dans mon exemple le script se trouve à <code>~/bin/ssh-limiter.py</code>, rendez le script exécutable si nécessaire.
+
+Cette étape consiste à modifier le fichier <code>~/.ssh/authorized_keys</code>, actuellement votre fichier contient la clé publique de votre serveur central qui commence par <code>ssh-rsa AAAAB3NzaC1yc2E...</code>, il faudra rajouter cette chaîne de caractère juste avant la clé publique : <code>command="/home/[USER]/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding</code>, pour que ça donne à la fin :
+<pre>
+command="/home/sae203/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding ssh-rsa AAAAB3NzaC1yc2EAAA...
+</pre>
+
+Ça permet de laisser passer seulement via SSH les commandes qui se trouvent dans les scripts Python, les autres commandes seront bloqués automatiquement.
 
 <h2>FICHIER YAML :</h2>
 

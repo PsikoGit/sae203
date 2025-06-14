@@ -71,3 +71,8 @@ dhcp-servers:
    10.20.1.5: 10.20.1.0/24
    10.20.2.5: 10.20.2.0/24
 </pre>
+
+<h2>Rappel des restrictions technique:</h2>
+
+Le fichier YAML doit être dans le même répertoire que les scripts python et doit se nommer : file.yaml
+La première ligne dans les fichiers de configuration dnsmasq doit être un commentaire et il doit se trouver dans le répertoire /etc/dnsmasq.d/ sur les serveurs DHCP

@@ -56,7 +56,13 @@ Example: add-dhcp-client.py aa:bb:cc:dd:ee:ff 10.20.1.100
 Allowed options : [-show] [-h] [--help]
 </pre>
 
-Ceci dit, commeçons par la commande <code>add-dhcp-client.py</code>, la syntaxe d'utilisation est la suivante : <code>add-dhcp-client.py MAC IP</code>, ça va ajouter dans le fichier de configuration dnsmasq une association MAC/IP, le serveur DHCP sur lequel l'association sera ajoutée dépendre de l'adresse IP qui sera passée en argument de ligne de commandes, par exemple si je fait <code>add-dhcp-client.py aa:aa:aa:aa:aa:aa 192.168.10.40</code>, ça va rajouter cette association dans le serveur DHCP qui se trouve 
+Ceci dit, commençons par la commande <code>add-dhcp-client.py</code>, la syntaxe d'utilisation est la suivante : <code>add-dhcp-client.py MAC IP</code>, ça va ajouter dans le fichier de configuration dnsmasq une association MAC/IP, le serveur DHCP sur lequel l'association sera ajoutée dépendra de l'adresse IP qui sera passée en argument de ligne de commandes, par exemple si je fait <code>add-dhcp-client.py aa:aa:aa:aa:aa:aa 192.168.10.40</code>, ça va rajouter cette association si dans le fichier YAML, il y'a un serveur DHCP qui se trouve dans le même réseau que l'IP passée en argument. Si en exécutant la commande il n'y a aucune sortie sur le terminal, c'est que la modification s'est bel et bien effectué, sinon voir le message d'erreur affiché. <br>
+
+Pour la commande <code>remove-dhcp-client.py</code>, la syntaxe est la suivante : <code>remove-dhcp-client.py MAC</code>. Ça aura pour effet de supprimer l'assocation MAC/IP s'il trouve l'adresse MAC dans un fichier de configuration sur les serveurs DHCP, si la même MAC se retrouve dans les fichiers de configuration de plusieurs serveurs DHCP ou alors par erreur dans le même fichier de configuration au sein d'un serveur DHCP, le script va supprimer seulement la première occurence détectée. <br>
+Il est possible de spécifier l'option <code>-d</code> pour cette commande, ça permet d'indiquer le serveur DHCP sur lequel on veut supprimer l'association, la syntaxe est la suivante : <code>remove-dhcp-client.py -d MAC DHCP_IP_ADDRESS</code>, par exemple, si je veux supprimer l'association de l'adresse MAC <code>a3:e2:aa:91:fe:f1</code> qui se trouve sur le serveur DHCP à l'adresse <code>10.20.2.5</code>, je vais exécuter la commande : <code>remove-dhcp-client.py -d a3:e2:aa:91:fe:f1 10.20.2.5</code>, seulement la première occurence du fichier sera supprimée si la MAC se retrouve nommée plusieurs par erreur. 
+S'il n'y a aucune sortie sur le terminal suite à l'exécution de la commande, ça signifie que la supression a bien eu lieu.
+
+Pour la commande 
 
 <h2>Instructions serveur-central :</h2>
 

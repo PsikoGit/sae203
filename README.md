@@ -31,7 +31,7 @@ Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), v
 
 <h2>Instructions serveur DHCP :</h2>
 
-Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>, le nom du fichier doit respecter le format suivant : uniquement des lettres (a-z, A-Z), des tirets (-) et des underscores (_)
+Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>, le nom du fichier doit respecter le format suivant : uniquement des lettres (a-z, A-Z), des tirets (<code>-</code>) et des underscores (<code>_</code>)
 
 Il faut <b>obligatoirement</b> que la première ligne du fichier de configuration dhcp soit un commentaire.
 

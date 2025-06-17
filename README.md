@@ -137,7 +137,7 @@ command="/home/sae203/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,n
 
 <h2>FICHIER YAML :</h2>
 
-Le fichier doit s'appeler obligatoire file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :
+Le fichier doit s'appeler obligatoirement file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :
 <pre>
 dhcp_hosts_cfg:
 user:

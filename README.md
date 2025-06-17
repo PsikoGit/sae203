@@ -4,6 +4,30 @@ Avoir un environnement avec des machines Linux qui supportent python3, pip3 et f
 
 Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs DHCP)
 
+Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit création du groupe sur les serveurs DHCP, etc...) pour que les codes soient fonctionnels.
+
+<h2>Présentation des fichiers</h2>
+
+<code>file.yaml</code> : fichier YAML de configuration utilisé pour les scripts python
+
+<code>install.sh</code> : script qui installe et automatise certaines choses : installations des paquets et dépendances nécessaires, gestion des droits d'exécutions, permettre d'exécuter les scripts python depuis n'importe quel répertoire et création du fichier YAML de manière dynamique <br>
+
+<code>configure_yaml.py</code>, <code>install_dependencies.sh</code> : sont des scripts appelés dans le fichier <code>install.sh</code> <br>
+
+<code>code_dhcp/ssh-limiter.py</code> : code python qui permet de faire un filtrage ssh et laisse passer seulement les commandes présente dans les scripts python <br>
+
+<code>README.md</code> : est le fichier que vous lisez actuellement, il contient les instructions concernant la présentation et l'installation de ma solution, et un guide d'utilisation des commandes Python. <br>
+
+<code>dhcp.py</code>, <code>config.py</code>, <code>validation.py</code> : sont des scripts python nécessaire au fonctionnement des commandes principales, à savoir :
+
+<code>add-dhcp-client.py</code> : permet d'ajouter une assocation MAC/IP dans la configuration dnsmasq des serveurs DHCP <br>
+
+<code>remove-dhcp-client.py</code> : permet de retirer une association MAC/IP dans la configuration dsnmasq des serveurs DHCP <br>
+
+<code>check-dhcp.py</code> : permet de vérifier la cohérence des fichiers de configuration dsnmasq des serveurs DHCP, voir s'il y'a des doublons d'adresse IP par exemple <br>
+
+<code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP <br>
+
 <h2>Instructions serveur-central :</h2>
 
 Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer avec tous les réseaux sur lequel se trouve un serveur DHCP que vous voulez superviser. Un exemple de topologie peut-être un serveur central relié à 2 VLANs sur lesquels se trouvent respectivement un serveur DHCP (voir schéma ci-dessous)
@@ -29,21 +53,21 @@ Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), v
 
 <h2>Instructions serveur DHCP :</h2>
 
-Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>
+Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>, le nom du fichier doit respecter le format suivant : uniquement des lettres (a-z, A-Z), des tirets (<code>-</code>) et des underscores (<code>_</code>)
 
-Il faut obligatoirement que la première ligne du fichier de configuration dhcp soit un commentaire.
+Il faut <b>obligatoirement</b> que la première ligne du fichier de configuration dhcp soit un commentaire.
 
 Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
 
 Filtrage sudo :
 
-Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo groupadd superv</code> et pour attribuer un utilisateur au groupe superv on fait <code>sudo usermod -aG superv [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%groupe ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe "groupe" à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par <code>/etc/dnsmasq.d/[...]</code> avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
+Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo groupadd [GROUP]</code>, il faudra que le groupe porte le même nom que le groupe créé sur le serveur central, pour attribuer un utilisateur au groupe on fait <code>sudo usermod -aG [GROUP] [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%[GROUP] ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe [GROUP] à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par <code>/etc/dnsmasq.d/[...]</code> avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
 
 Filtrage ssh :
 
-Il faudra prendre le script qui se trouve dans le répertoire <code>code_dhcp</code> sur le dépot GitHub et le mettre sur votre serveur DHCP, dans mon exemple le script se trouve à <code>~/bin/ssh-limiter.py</code>, rendez le script exécutable si nécessaire.
+Il faudra récupérer le script qui se trouve dans le répertoire <code>code_dhcp</code> sur le dépot GitHub et le mettre sur votre serveur DHCP, dans mon exemple le script se trouve à <code>~/bin/ssh-limiter.py</code>, rendez le script exécutable si nécessaire. Vous 
 
-Cette étape consiste à modifier le fichier <code>~/.ssh/authorized_keys</code>, actuellement votre fichier contient la clé publique de votre serveur central qui commence par <code>ssh-rsa AAAAB3NzaC1yc2E...</code>, il faudra rajouter cette chaîne de caractère juste avant la clé publique : <code>command="/home/[USER]/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding</code>, pour que ça donne à la fin :
+Cette étape consiste à modifier le fichier <code>~/.ssh/authorized_keys</code>, actuellement votre fichier contient la clé publique de votre serveur central qui commence par <code>ssh-rsa AAAAB3NzaC1yc2E...</code>, il faudra rajouter cette chaîne de caractère juste avant la clé publique : <code>command="/chemin/vers/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding</code>, pour que ça donne à la fin :
 <pre>
 command="/home/sae203/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding ssh-rsa AAAAB3NzaC1yc2EAAA...
 </pre>
@@ -61,7 +85,7 @@ dhcp-servers:
 
 À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant. <br>
 À la clé user il faudra renseigner le nom d'utilisateur en commun sur tous vos serveurs <br>
-À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP et le réseau dans lequel il se situe, voici un exemple : 
+À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP en tant que clé et le réseau dans lequel il se situe en tant que valeur, voici un exemple : 
 <pre>
 dhcp_hosts_cfg: /etc/dnsmasq.d/hosts.conf
 user: sae203
@@ -69,3 +93,6 @@ dhcp-servers:
    10.20.1.5: 10.20.1.0/24
    10.20.2.5: 10.20.2.0/24
 </pre>
+
+
+

@@ -2,11 +2,11 @@
 - [Pré-requis techniques](#pré-requis-techniques)
 - [Présentation des fichiers](#présentation-des-fichiers)
 - [Guide d'utilisation des commandes](#guide-dutilisation-des-commandes)
-- [Instructions serveur-central](#instructions-serveur-central ) Instructions serveur-central
+- [Instructions serveur-central](#instructions-serveur-central) 
 - [Instructions serveur DHCP](#instructions-serveur-dhcp)
 - [Fichier YAML](#fichier-yaml)
 
-## Pré-requis techniques :
+## Pré-requis techniques
 
 Avoir un environnement avec des machines Linux qui supportent python3, pip3 et fabric.
 
@@ -97,7 +97,7 @@ ff:ff:ff:ff:11:11              10.20.2.70
 bb:bb:bb:bb:bb:bb              10.20.2.80
 </pre>
 
-## Instructions serveur-central :
+## Instructions serveur-central
 
 Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer avec tous les réseaux sur lequel se trouve un serveur DHCP que vous voulez superviser. Un exemple de topologie peut-être un serveur central relié à 2 VLANs sur lesquels se trouvent respectivement un serveur DHCP (voir schéma ci-dessous)
    
@@ -120,7 +120,7 @@ Une fois que c'est fait, il faut créer un groupe, vous pouvez le nommer comme v
 Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pour se faire, sur le serveur central, entrer la commande : <code>ssh-keygen -t rsa</code>, ⚠️IMPORTANT⚠️ : laissez le nom par défaut des fichiers qui contiennent les clés (id_rsa et id_rsa.pub) sinon les codes ne vont pas fonctionner.
 Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), vous pouvez utiliser la commande <code>ssh-copy-id [USER]@[IP_DESTINATION]</code> depuis le serveur central, désormais, il vous sera possible de vous connecter au serveur DHCP distant via ssh sans mot de passe, répétez la même procédure pour tout vos serveurs DHCP.
 
-## Instructions serveur DHCP :
+## Instructions serveur DHCP
 
 Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>, le nom du fichier doit respecter le format suivant : uniquement des lettres (a-z, A-Z), des tirets (<code>-</code>) et des underscores (<code>_</code>)
 
@@ -143,7 +143,7 @@ command="/home/sae203/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,n
 
 Ça permet de laisser passer seulement via SSH les commandes qui se trouvent dans les scripts Python, les autres commandes seront bloqués automatiquement.
 
-## FICHIER YAML :
+## FICHIER YAML
 
 Le fichier doit s'appeler obligatoirement file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :
 <pre>

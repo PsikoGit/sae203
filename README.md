@@ -30,7 +30,7 @@ Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit
 
 <h2>Guide d'utilisation des commandes</h2>
 
-Chaque commande de supervision vérifie les paramètres qui lui sont fournis, de manière à générer des messages d’erreur appropriés dans la grande majorité des cas d’entrées.
+Chaque commande de supervision vérifie les paramètres qui lui sont fournis, de manière à générer des messages d’erreur appropriés dans la grande majorité des cas.
 
 De plus, les erreurs liées aux connexions distantes sont également signalées à l’utilisateur.
 

@@ -1,3 +1,15 @@
+## Sommaire
+- [Pré-requis](#-pré-requis-techniques)
+- [Présentation des fichiers](#-présentation-des-fichiers)
+- [Commandes principales](#-utilisation-des-commandes)
+- [Détail des commandes](#-détail-des-commandes)
+- [Configuration du serveur central](#-configuration-du-serveur-central)
+- [Configuration des serveurs DHCP](#-configuration-des-serveurs-dhcp)
+- [Exemple de fichier YAML](#-exemple-de-fichier-fileyaml)
+- [Sécurité](#-sécurité)
+- [À venir](#-à-venir)
+
+
 <h2>Pré-requis techniques :</h2>
 
 Avoir un environnement avec des machines Linux qui supportent python3, pip3 et fabric.

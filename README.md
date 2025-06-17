@@ -31,9 +31,9 @@ Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), v
 
 <h2>Instructions serveur DHCP :</h2>
 
-Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>
+Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>, le nom du fichier doit respecter le format suivant : uniquement des lettres (a-z, A-Z), des tirets (-) et des underscores (_)
 
-Il faut obligatoirement que la première ligne du fichier de configuration dhcp soit un commentaire.
+Il faut <b>obligatoirement</b> que la première ligne du fichier de configuration dhcp soit un commentaire.
 
 Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
 
@@ -43,9 +43,9 @@ Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo gr
 
 Filtrage ssh :
 
-Il faudra prendre le script qui se trouve dans le répertoire <code>code_dhcp</code> sur le dépot GitHub et le mettre sur votre serveur DHCP, dans mon exemple le script se trouve à <code>~/bin/ssh-limiter.py</code>, rendez le script exécutable si nécessaire.
+Il faudra récupérer le script qui se trouve dans le répertoire <code>code_dhcp</code> sur le dépot GitHub et le mettre sur votre serveur DHCP, dans mon exemple le script se trouve à <code>~/bin/ssh-limiter.py</code>, rendez le script exécutable si nécessaire. Vous 
 
-Cette étape consiste à modifier le fichier <code>~/.ssh/authorized_keys</code>, actuellement votre fichier contient la clé publique de votre serveur central qui commence par <code>ssh-rsa AAAAB3NzaC1yc2E...</code>, il faudra rajouter cette chaîne de caractère juste avant la clé publique : <code>command="/home/[USER]/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding</code>, pour que ça donne à la fin :
+Cette étape consiste à modifier le fichier <code>~/.ssh/authorized_keys</code>, actuellement votre fichier contient la clé publique de votre serveur central qui commence par <code>ssh-rsa AAAAB3NzaC1yc2E...</code>, il faudra rajouter cette chaîne de caractère juste avant la clé publique : <code>command="/chemin/vers/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding</code>, pour que ça donne à la fin :
 <pre>
 command="/home/sae203/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding ssh-rsa AAAAB3NzaC1yc2EAAA...
 </pre>
@@ -81,5 +81,7 @@ dhcp-servers:
 <code>check-dhcp.py</code> : permet de vérifier la cohérence des fichiers de configuration dsnmasq des serveurs DHCP, voir s'il y'a des doublons d'adresse IP par exemple <br>
 <code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP 
 <code>file.yaml</code> : fichier yaml de configuration, on en à déjà parler
-<code>install.sh</code> : script qui installe et automatise certaines choses : installations des paquets et dépendances nécessaires, gestion des droits d'exécutions, permettre d'exécuter les scripts python depuis n'importe quel 
+<code>install.sh</code> : script qui installe et automatise certaines choses : installations des paquets et dépendances nécessaires, gestion des droits d'exécutions, permettre d'exécuter les scripts python depuis n'importe quel répertoire et création du fichier YAML de manière dynamique <br>
+<code>configure_yaml.py</code>, <code>install_dependencies.sh</code> sont des scripts appelés dans le fichier <code>install.sh</code> <br>
+<code>code_dhcp/ssh-limiter.py</code> : code python qui permet de faire un filtrage ssh et laisse passer seulement les commandes présente dans les scripts python <br>
 

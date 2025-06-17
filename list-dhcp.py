@@ -6,6 +6,7 @@ from dhcp import dhcp_list
 from pathlib import Path
 from validation import valid_ip
 from paramiko.ssh_exception import NoValidConnectionsError
+from invoke import UnexpectedExit
 
 def show_help():
     """
@@ -105,6 +106,9 @@ def list_dhcp(serv_dhcp=None):
         except NoValidConnectionsError:
             print(f"SSH connection error with {serv_dhcp} server",file=sys.stderr)
             return
+        except UnexpectedExit:
+            print(f"Error while attempting remote command execution")
+            return
             
         for elem in liste:
             mac = elem.get('mac')
@@ -120,6 +124,9 @@ def list_dhcp(serv_dhcp=None):
                 liste = dhcp_list(serv,cfg)
             except NoValidConnectionsError:
                 print(f"SSH connection error with {serv} server",file=sys.stderr)
+                return
+            except UnexpectedExit:
+                print(f"Error while attempting remote command execution")
                 return
             for elem in liste:
                 mac=elem.get('mac')

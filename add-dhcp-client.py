@@ -105,6 +105,9 @@ def add_dhcp_client(mac,ip):
     except NoValidConnectionsError:
         print(f"SSH connection error with {serv_dhcp} server",file=sys.stderr)
         return
+    except UnexpectedExit:
+        print(f"Error while attempting remote command execution")
+        return
 
     if result == 3: #S'il y'a eu une modification sur le serveur distant
 

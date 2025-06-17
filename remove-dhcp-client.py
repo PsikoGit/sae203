@@ -105,6 +105,9 @@ def remove_dhcp_client_with_server(mac, serv_dhcp):
     except NoValidConnectionsError:       
         print(f"SSH connection error with {serv_dhcp} server",file=sys.stderr)
         return
+    except UnexpectedExit:
+        print(f"Error while attempting remote command execution")
+        return
 
     #Si il y'a eu une supression
     if remove == True:

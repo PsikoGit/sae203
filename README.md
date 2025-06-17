@@ -30,7 +30,25 @@ Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit
 
 <h2>Syntaxe et utilisation des commandes </h2>
 
+Pour toute les commandes (<code>add-dhcp-client.py</code>,<code>remove-dhcp-client.py</code>,<code>check-dhcp.py</code>,<code>list-dhcp.py</code>) il y'a des options en communs qui sont : <br>
 
+<code>-show</code> : permet de voir les serveurs DHCP configurés dans le fichier yaml, exemple de sortie : 
+
+<pre>
+sae203@srv-central:~$ add-dhcp-client.py -show
+DHCP server defined in the YAML file : 10.20.1.5
+DHCP server defined in the YAML file : 10.20.2.5
+</pre>
+
+<code>-h</code> ou <code>--help</code> : permet d'afficher une brève explication de ce que fait la commande appelée et la syntaxe d'utilisation de celle-ci, exemple : 
+
+<pre>
+sae203@srv-central:~$ add-dhcp-client.py -h
+The command allows you to add a MAC/IP association to the DHCP server on the same network as the specified IP
+Usage: add-dhcp-client.py MAC IP
+Example: add-dhcp-client.py aa:bb:cc:dd:ee:ff 10.20.1.100
+Allowed options : [-show] [-h] [--help]
+</pre>
 
 <h2>Instructions serveur-central :</h2>
 

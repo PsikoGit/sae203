@@ -5,9 +5,7 @@
 - [Détail des commandes](#guide-dutilisation-des-commandes)
 - [Configuration du serveur central](#instructions-serveur-central)
 - [Configuration des serveurs DHCP](#instructions-serveur-dhcp)
-- [Exemple de fichier YAML](#exemple-de-fichier-fileyaml)
-- [Sécurité](#sécurité)
-- [À venir](#à-venir)
+- [Exemple de fichier YAML](#fichier-yaml)
 
 <h2>Pré-requis techniques :</h2>
 

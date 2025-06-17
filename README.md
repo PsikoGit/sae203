@@ -56,13 +56,38 @@ Example: add-dhcp-client.py aa:bb:cc:dd:ee:ff 10.20.1.100
 Allowed options : [-show] [-h] [--help]
 </pre>
 
-Ceci dit, commençons par la commande <code>add-dhcp-client.py</code>, la syntaxe d'utilisation est la suivante : <code>add-dhcp-client.py MAC IP</code>, ça va ajouter dans le fichier de configuration dnsmasq une association MAC/IP, le serveur DHCP sur lequel l'association sera ajoutée dépendra de l'adresse IP qui sera passée en argument de ligne de commandes, par exemple si je fait <code>add-dhcp-client.py aa:aa:aa:aa:aa:aa 192.168.10.40</code>, ça va rajouter cette association si dans le fichier YAML, il y'a un serveur DHCP qui se trouve dans le même réseau que l'IP passée en argument. Si en exécutant la commande il n'y a aucune sortie sur le terminal, c'est que la modification s'est bel et bien effectué, sinon voir le message d'erreur affiché. <br>
+Ceci dit, commençons par la commande <code>add-dhcp-client.py</code>, la syntaxe d'utilisation est la suivante : <code>add-dhcp-client.py MAC IP</code>, ça va ajouter dans le fichier de configuration dnsmasq une association MAC/IP, le serveur DHCP sur lequel l'association sera ajoutée dépendra de l'adresse IP qui sera passée en argument de ligne de commandes, par exemple si je fait <code>add-dhcp-client.py aa:aa:aa:aa:aa:aa 192.168.10.40</code>, ça va rajouter cette association si dans le fichier YAML, il y'a un serveur DHCP qui se trouve dans le même réseau que l'IP passée en argument. Si en exécutant la commande il n'y a aucune sortie sur le terminal, c'est que la modification s'est bel et bien effectué, sinon voir le message d'erreur affiché. Attention cette commande ne vérifie pas le cas où vous entrez une IP de réseau où de broadcast, il faudra attendre le patch qui arrive prochainement...<br>
 
 Pour la commande <code>remove-dhcp-client.py</code>, la syntaxe est la suivante : <code>remove-dhcp-client.py MAC</code>. Ça aura pour effet de supprimer l'assocation MAC/IP s'il trouve l'adresse MAC dans un fichier de configuration sur les serveurs DHCP, si la même MAC se retrouve dans les fichiers de configuration de plusieurs serveurs DHCP ou alors par erreur dans le même fichier de configuration au sein d'un serveur DHCP, le script va supprimer seulement la première occurence détectée. <br>
-Il est possible de spécifier l'option <code>-d</code> pour cette commande, ça permet d'indiquer le serveur DHCP sur lequel on veut supprimer l'association, la syntaxe est la suivante : <code>remove-dhcp-client.py -d MAC DHCP_IP_ADDRESS</code>, par exemple, si je veux supprimer l'association de l'adresse MAC <code>a3:e2:aa:91:fe:f1</code> qui se trouve sur le serveur DHCP à l'adresse <code>10.20.2.5</code>, je vais exécuter la commande : <code>remove-dhcp-client.py -d a3:e2:aa:91:fe:f1 10.20.2.5</code>, seulement la première occurence du fichier sera supprimée si la MAC se retrouve nommée plusieurs par erreur. 
+Il est possible de spécifier l'option <code>-d</code> pour cette commande, ça permet d'indiquer le serveur DHCP sur lequel on veut supprimer l'association, la syntaxe est la suivante : <code>remove-dhcp-client.py -d MAC DHCP_IP_ADDRESS</code>, par exemple, si je veux supprimer l'association de l'adresse MAC <code>a3:e2:aa:91:fe:f1</code> qui se trouve sur le serveur DHCP à l'adresse <code>10.20.2.5</code>, je vais exécuter la commande : <code>remove-dhcp-client.py -d a3:e2:aa:91:fe:f1 10.20.2.5</code>, seule la première occurrence sera supprimée si l'adresse MAC apparaît plusieurs fois par erreur dans le fichier dnsmasq.
 S'il n'y a aucune sortie sur le terminal suite à l'exécution de la commande, ça signifie que la supression a bien eu lieu.
 
-Pour la commande 
+Pour la commande <code>check-dhcp.py</code>, la syntaxe d'utilisation est la suivante : <code>check-dhcp.py [IP-OU-RESEAU]</code>. Cette commande permet de vérifier la cohérence des fichiers de configuration <code>dnsmasq</code> sur les serveurs DHCP déclarés dans le fichier YAML de configuration.
+Si aucun argument n'est passé, tous les serveurs DHCP listés dans le fichier YAML seront analysés. Si une adresse IP d’un serveur ou un réseau (par exemple <code>192.168.1.0/24</code>) est fourni, alors seule la configuration associée à ce serveur sera examinée, voici un exemple : 
+<pre>
+sae203@srv-central:~$ check-dhcp.py 
+duplicate MAC addresses in 10.20.2.5 cfg:
+dhcp-host=aa:ee:ee:ff:ff:ff,10.20.2.40
+dhcp-host=aa:ee:ee:ff:ff:ff,10.20.2.30
+</pre>
+
+Dans le cas où le serveur ne peut pas être identifié (aucune correspondance dans le fichier YAML), un message d’erreur <code>cannot identify DHCP server</code> sera affiché et l'exécution sera interrompue. S'il n'y a aucune sortie suite à l'exécution de la commande, ça veut dire qu'il n'y pas de problèmes d'attributions MAC et IP.
+
+Pour la commande <code>list-dhcp.py</code>, la syntaxe d’utilisation est : <code>list-dhcp.py [serveur]</code>. Cette commande affiche les associations adresse MAC/adresse IP définies dans les fichiers <code>dnsmasq</code> des serveurs DHCP.
+Si aucun argument n’est fourni, la commande parcourt tous les serveurs déclarés dans le fichier YAML et affiche les associations trouvées, regroupées par serveur. Si une adresse IP de serveur est fournie, la commande ne liste que les associations présentes sur ce serveur. <br>
+
+Le format de sortie est toujours de deux colonnes : la première pour l’adresse MAC, la seconde pour l’adresse IP, avec un alignement clair pour la lisibilité, voici un exemple :
+<pre>
+sae203@srv-central:~$ list-dhcp.py 
+10.20.1.5:
+BB:BB:eB:bB:BB:BB              10.20.1.11
+ff:ff:ff:ff:ff:44              10.20.1.210
+aa:aa:aa:aa:aa:ab              10.20.1.70
+10.20.2.5:
+aa:ee:ee:ff:ff:ff              10.20.2.40
+ff:ff:ff:ff:11:11              10.20.2.70
+bb:bb:bb:bb:bb:bb              10.20.2.80
+</pre>
 
 <h2>Instructions serveur-central :</h2>
 

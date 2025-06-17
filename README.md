@@ -1,5 +1,5 @@
 ## Sommaire
-- [Pré-requis](#-pré-requis-techniques)
+- [Pré-requis](#-Pré-requis-techniques :)
 - [Présentation des fichiers](#-présentation-des-fichiers)
 - [Commandes principales](#-utilisation-des-commandes)
 - [Détail des commandes](#-détail-des-commandes)

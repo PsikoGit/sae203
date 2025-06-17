@@ -39,7 +39,7 @@ Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
 
 Filtrage sudo :
 
-Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo groupadd superv</code> et pour attribuer un utilisateur au groupe superv on fait <code>sudo usermod -aG superv [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%groupe ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe "groupe" à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par <code>/etc/dnsmasq.d/[...]</code> avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
+Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo groupadd [GROUP]</code>, il faudra que le groupe porte le même nom que le groupe créé sur le serveur central, pour attribuer un utilisateur au groupe on fait <code>sudo usermod -aG [GROUP] [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%[GROUP] ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe [GROUP] à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par <code>/etc/dnsmasq.d/[...]</code> avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
 
 Filtrage ssh :
 
@@ -63,7 +63,7 @@ dhcp-servers:
 
 À la clé dhcp_hosts_cfg il faudra renseigner le chemin absolu du fichier dnsmasq de vos serveurs DHCP distant. <br>
 À la clé user il faudra renseigner le nom d'utilisateur en commun sur tous vos serveurs <br>
-À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP et le réseau dans lequel il se situe, voici un exemple : 
+À la clé dhcp-servers il faudra renseigner un/des dictionnaire(s) avec l'adresse IP du serveur DHCP en tant que clé et le réseau dans lequel il se situe en tant que valeur, voici un exemple : 
 <pre>
 dhcp_hosts_cfg: /etc/dnsmasq.d/hosts.conf
 user: sae203
@@ -72,7 +72,14 @@ dhcp-servers:
    10.20.2.5: 10.20.2.0/24
 </pre>
 
-<h2>Rappel des restrictions technique:</h2>
+<h2>Présentation des fichiers</h2>
 
-Le fichier YAML doit être dans le même répertoire que les scripts python et doit se nommer : file.yaml
-La première ligne dans les fichiers de configuration dnsmasq doit être un commentaire et il doit se trouver dans le répertoire /etc/dnsmasq.d/ sur les serveurs DHCP
+<code>README.md</code> est le fichier que vous lisez actuellement, il contient les instructions concernant la présentation et l'installation de ma solution, et un guide d'utilisation des commandes Python. <br>
+<code>dhcp.py</code>, <code>config.py</code>, <code>validation.py</code> sont des scripts python nécessaire au fonctionnement des commandes principales, à savoir :
+<code>add-dhcp-client.py</code> : permet d'ajouter une assocation MAC/IP dans la configuration dnsmasq des serveurs DHCP <br>
+<code>remove-dhcp-client.py</code> : permet de retirer une association MAC/IP dans la configuration dsnmasq des serveurs DHCP <br>
+<code>check-dhcp.py</code> : permet de vérifier la cohérence des fichiers de configuration dsnmasq des serveurs DHCP, voir s'il y'a des doublons d'adresse IP par exemple <br>
+<code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP 
+<code>file.yaml</code> : fichier yaml de configuration, on en à déjà parler
+<code>install.sh</code> : script qui installe et automatise certaines choses : installations des paquets et dépendances nécessaires, gestion des droits d'exécutions, permettre d'exécuter les scripts python depuis n'importe quel 
+

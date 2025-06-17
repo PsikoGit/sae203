@@ -28,7 +28,13 @@ Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit
 
 <code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP <br>
 
-<h2>Syntaxe et utilisation des commandes </h2>
+<h2>Guide d'utilisation des commandes</h2>
+
+Chaque commande de supervision vérifie les paramètres qui lui sont fournis, de manière à générer des messages d’erreur appropriés dans la grande majorité des cas d’entrées.
+
+De plus, les erreurs liées aux connexions distantes sont également signalées à l’utilisateur.
+
+Enfin, des correctifs seront effectués sur l’outil de supervision si des problèmes algorithmiques sont détectés.
 
 Pour toute les commandes (<code>add-dhcp-client.py</code>,<code>remove-dhcp-client.py</code>,<code>check-dhcp.py</code>,<code>list-dhcp.py</code>) il y'a des options en communs qui sont : <br>
 
@@ -49,6 +55,8 @@ Usage: add-dhcp-client.py MAC IP
 Example: add-dhcp-client.py aa:bb:cc:dd:ee:ff 10.20.1.100
 Allowed options : [-show] [-h] [--help]
 </pre>
+
+Ceci dit, commeçons par la commande <code>add-dhcp-client.py</code>, la syntaxe d'utilisation est la suivante : <code>add-dhcp-client.py MAC IP</code>, ça va ajouter dans le fichier de configuration dnsmasq une association MAC/IP, le serveur DHCP sur lequel l'association sera ajoutée dépendre de l'adresse IP qui sera passée en argument de ligne de commandes, par exemple si je fait <code>add-dhcp-client.py aa:aa:aa:aa:aa:aa 192.168.10.40</code>, ça va rajouter cette association dans le serveur DHCP qui se trouve 
 
 <h2>Instructions serveur-central :</h2>
 
@@ -71,7 +79,7 @@ Une fois que c'est fait, il faut créer un groupe, vous pouvez le nommer comme v
 Ça va nous servir pour pouvoir faire certaines commandes qui nécessitent les droits sudo sans pour autant avoir besoin de renseigner le mot de passe.
 
 Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pour se faire, sur le serveur central, entrer la commande : <code>ssh-keygen -t rsa</code>, ⚠️IMPORTANT⚠️ : laissez le nom par défaut des fichiers qui contiennent les clés (id_rsa et id_rsa.pub) sinon les codes ne vont pas fonctionner.
-Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), vous pouvez utiliser scp, exemple : <code>scp ~/.ssh/id_rsa.pub user@ip_dhcp:</code>, il faudra avoir installé au préalable le paquet ssh sur le/les serveur(s) DHCP, ensuite aller sur le serveur DHCP et faire <code>cat ~/id_rsa.pub >> ~/.ssh/authorized_keys</code>, désormais, il vous sera possible de vous connecter au serveur DHCP distant via ssh sans mot de passe, répétez la même procédure pour tout vos serveurs DHCP.
+Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), vous pouvez utiliser la commande <code>ssh-copy-id [USER]@[IP_DESTINATION]</code> depuis le serveur central, désormais, il vous sera possible de vous connecter au serveur DHCP distant via ssh sans mot de passe, répétez la même procédure pour tout vos serveurs DHCP.
 
 <h2>Instructions serveur DHCP :</h2>
 

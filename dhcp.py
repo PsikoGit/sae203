@@ -1,6 +1,7 @@
 import ipaddress
 import yaml
 from fabric import Connection
+from invoke import UnexpectedExit
 
 def ip_other_mac_exists(cnx, ip, mac, cfg):
     """ 
@@ -236,7 +237,8 @@ def check_dhcp_list(serv_dhcp,cfg):
     # trie avec 'sort' en étant insensible à la casse
     # 'uniq -di' pour retourner ce qui est en doublon une seule fois et en etant insensible a la casse
 
-
+    verif_file_exist = cnx.run(f"cat {file}",hide=True) #On va recup le try dans check-dhcp.py
+        
     check_mac = cnx.run(f"cut -d ',' -f1 {file} | sort -f | uniq -di",hide=True)
 
 

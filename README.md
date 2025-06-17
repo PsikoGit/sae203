@@ -1,13 +1,12 @@
 ## Sommaire
-- [Pré-requis](#pré-requis-techniques)
+- [Pré-requis techniques](#pré-requis-techniques)
 - [Présentation des fichiers](#présentation-des-fichiers)
-- [Commandes principales](#guide-dutilisation-des-commandes)
-- [Détail des commandes](#guide-dutilisation-des-commandes)
-- [Configuration du serveur central](#instructions-serveur-central)
-- [Configuration des serveurs DHCP](#instructions-serveur-dhcp)
-- [Exemple de fichier YAML](#fichier-yaml)
+- [Guide d'utilisation des commandes](#guide-dutilisation-des-commandes)
+- [Instructions serveur-central](#instructions-serveur-central)
+- [Instructions serveur DHCP](#instructions-serveur-dhcp)
+- [Fichier YAML](#fichier-yaml)
 
-<h2>Pré-requis techniques :</h2>
+## Pré-requis techniques :
 
 Avoir un environnement avec des machines Linux qui supportent python3, pip3 et fabric.
 
@@ -15,7 +14,7 @@ Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs
 
 Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit création du groupe sur les serveurs DHCP, etc...) pour que les codes soient fonctionnels.
 
-<h2>Présentation des fichiers</h2>
+## Présentation des fichiers
 
 <code>file.yaml</code> : fichier YAML de configuration utilisé pour les scripts python
 
@@ -37,7 +36,7 @@ Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit
 
 <code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP <br>
 
-<h2>Guide d'utilisation des commandes</h2>
+## Guide d'utilisation des commandes
 
 Chaque commande de supervision vérifie les paramètres qui lui sont fournis, de manière à générer des messages d’erreur appropriés dans la grande majorité des cas.
 
@@ -98,7 +97,7 @@ ff:ff:ff:ff:11:11              10.20.2.70
 bb:bb:bb:bb:bb:bb              10.20.2.80
 </pre>
 
-<h2>Instructions serveur-central :</h2>
+## Instructions serveur-central :
 
 Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer avec tous les réseaux sur lequel se trouve un serveur DHCP que vous voulez superviser. Un exemple de topologie peut-être un serveur central relié à 2 VLANs sur lesquels se trouvent respectivement un serveur DHCP (voir schéma ci-dessous)
    
@@ -121,7 +120,7 @@ Une fois que c'est fait, il faut créer un groupe, vous pouvez le nommer comme v
 Il vous faudra une paire de clé rsa ssh privée/publique sans mot de passe, pour se faire, sur le serveur central, entrer la commande : <code>ssh-keygen -t rsa</code>, ⚠️IMPORTANT⚠️ : laissez le nom par défaut des fichiers qui contiennent les clés (id_rsa et id_rsa.pub) sinon les codes ne vont pas fonctionner.
 Transférez ensuite votre clé publique sur le/les serveur(s) DHCP distant(s), vous pouvez utiliser la commande <code>ssh-copy-id [USER]@[IP_DESTINATION]</code> depuis le serveur central, désormais, il vous sera possible de vous connecter au serveur DHCP distant via ssh sans mot de passe, répétez la même procédure pour tout vos serveurs DHCP.
 
-<h2>Instructions serveur DHCP :</h2>
+## Instructions serveur DHCP :
 
 Le service DHCP devra être fourni via le paquet <code>dnsmasq</code> qui devra être installée sur votre serveur, le fichier de configuration contenant les assocations entre MAC et IP devra se trouver dans le répertoire <code>/etc/dnsmasq.d/</code>, le nom du fichier doit respecter le format suivant : uniquement des lettres (a-z, A-Z), des tirets (<code>-</code>) et des underscores (<code>_</code>)
 
@@ -144,7 +143,7 @@ command="/home/sae203/bin/ssh-limiter.py",no-port-forwarding,no-X11-forwarding,n
 
 Ça permet de laisser passer seulement via SSH les commandes qui se trouvent dans les scripts Python, les autres commandes seront bloqués automatiquement.
 
-<h2>FICHIER YAML :</h2>
+## FICHIER YAML :
 
 Le fichier doit s'appeler obligatoirement file.yaml et se trouver dans le <b>même</b> répertoire que les scripts python, il se constitue de cette sorte :
 <pre>

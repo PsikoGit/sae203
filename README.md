@@ -28,6 +28,10 @@ Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit
 
 <code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP <br>
 
+<h2>Syntaxe et utilisation des commandes </h2>
+
+
+
 <h2>Instructions serveur-central :</h2>
 
 Pour choisir votre serveur central, il faudra qu'il soit capable de communiquer avec tous les réseaux sur lequel se trouve un serveur DHCP que vous voulez superviser. Un exemple de topologie peut-être un serveur central relié à 2 VLANs sur lesquels se trouvent respectivement un serveur DHCP (voir schéma ci-dessous)
@@ -61,7 +65,7 @@ Sur le serveur DHCP, il faudra effectuer un filtra ssh et un filtrage sudo.
 
 Filtrage sudo :
 
-Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo groupadd [GROUP]</code>, il faudra que le groupe porte le même nom que le groupe créé sur le serveur central, pour attribuer un utilisateur au groupe on fait <code>sudo usermod -aG [GROUP] [USER]</code> et modifer le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%[GROUP] ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe [GROUP] à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par <code>/etc/dnsmasq.d/[...]</code> avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
+Il faudra créer un groupe sur votre serveur DHCP avec la commande <code>sudo groupadd [GROUP]</code>, il faudra que le groupe porte le même nom que le groupe créé sur le serveur central, pour attribuer un utilisateur au groupe on fait <code>sudo usermod -aG [GROUP] [USER]</code> et modifier le fichier <code>/etc/sudoers</code> via la commande <code>sudo visudo</code> pour rajouter la ligne suivante : <code>%[GROUP] ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart dnsmasq , /usr/bin/sed * [chemin/vers/fichier/dnsmasq]</code>, ça va permettre d'autoriser les membres du groupe [GROUP] à exécuter les commandes <code>systemctl restart dnsmasq</code> et les commandes qui commencent par sudo sed et finissent par <code>/etc/dnsmasq.d/[...]</code> avec les droits sudo sans mot de passe, ça permet d'éviter de rentrer le mot de passe sudo de la machine distante à chaque fois qu'on veut exécuter les commandes python.
 
 Filtrage ssh :
 

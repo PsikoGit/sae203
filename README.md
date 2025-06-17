@@ -2,7 +2,7 @@
 - [Pré-requis techniques](#pré-requis-techniques)
 - [Présentation des fichiers](#présentation-des-fichiers)
 - [Guide d'utilisation des commandes](#guide-dutilisation-des-commandes)
-- [Instructions serveur-central](#instructions-serveur-central)
+- [Instructions serveur-central](#instructions-serveur-central ) Instructions serveur-central
 - [Instructions serveur DHCP](#instructions-serveur-dhcp)
 - [Fichier YAML](#fichier-yaml)
 

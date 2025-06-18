@@ -8,33 +8,33 @@
 
 ## Pré-requis techniques
 
-Avoir un environnement avec des machines Linux qui supportent python3, pip3 et fabric.
+Avoir un environnement avec des machines Linux qui supportent Python3, pip3 et Fabric.
 
-Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs DHCP)
+Avoir un utilisateur commun sur toutes les machines (serveur central et serveurs DHCP).
 
-Disclaimer : Il faut avoir fini toute la procédure d'installation (que ça soit création du groupe sur les serveurs DHCP, etc...) pour que les codes soient fonctionnels.
+Disclaimer : Il faut avoir fini toute la procédure d'installation (que ce soit création du groupe sur les serveurs DHCP, etc...) pour que les codes soient fonctionnels.
 
 ## Présentation des fichiers
 
-<code>file.yaml</code> : fichier YAML de configuration utilisé pour les scripts python
+<code>file.yaml</code> : fichier YAML de configuration utilisé pour les scripts Python
 
-<code>install.sh</code> : script qui installe et automatise certaines choses : installations des paquets et dépendances nécessaires, gestion des droits d'exécutions, permettre d'exécuter les scripts python depuis n'importe quel répertoire et création du fichier YAML de manière dynamique <br>
+<code>install.sh</code> : script qui installe et automatise certaines choses : installation des paquets et dépendances nécessaires, gestion des droits d'exécution, permettre d'exécuter les scripts python depuis n'importe quel répertoire et création du fichier YAML de manière dynamique <br>
 
 <code>configure_yaml.py</code>, <code>install_dependencies.sh</code> : sont des scripts appelés dans le fichier <code>install.sh</code> <br>
 
-<code>code_dhcp/ssh-limiter.py</code> : code python qui permet de faire un filtrage ssh et laisse passer seulement les commandes présente dans les scripts python <br>
+<code>code_dhcp/ssh-limiter.py</code> : code python qui permet de faire un filtrage ssh et laisse passer seulement les commandes présentes dans les scripts python <br>
 
 <code>README.md</code> : est le fichier que vous lisez actuellement, il contient les instructions concernant la présentation et l'installation de ma solution, et un guide d'utilisation des commandes Python. <br>
 
 <code>dhcp.py</code>, <code>config.py</code>, <code>validation.py</code> : sont des scripts python nécessaire au fonctionnement des commandes principales, à savoir :
 
-<code>add-dhcp-client.py</code> : permet d'ajouter une assocation MAC/IP dans la configuration dnsmasq des serveurs DHCP <br>
+<code>add-dhcp-client.py</code> : permet d'ajouter une association MAC/IP dans la configuration dnsmasq des serveurs DHCP <br>
 
-<code>remove-dhcp-client.py</code> : permet de retirer une association MAC/IP dans la configuration dsnmasq des serveurs DHCP <br>
+<code>remove-dhcp-client.py</code> : permet de retirer une association MAC/IP dans la configuration dnsmasq des serveurs DHCP <br>
 
-<code>check-dhcp.py</code> : permet de vérifier la cohérence des fichiers de configuration dsnmasq des serveurs DHCP, voir s'il y'a des doublons d'adresse IP par exemple <br>
+<code>check-dhcp.py</code> : permet de vérifier la cohérence des fichiers de configuration dnsmasq des serveurs DHCP, voir s'il y'a des doublons d'adresse IP par exemple <br>
 
-<code>list-dhcp.py</code> : permet un affichage formatté de la configuration dnsmasq des serveurs DHCP <br>
+<code>list-dhcp.py</code> : permet un affichage formaté de la configuration dnsmasq des serveurs DHCP <br>
 
 ## Guide d'utilisation des commandes
 
